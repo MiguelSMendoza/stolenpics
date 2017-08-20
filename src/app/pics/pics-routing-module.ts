@@ -8,16 +8,14 @@ const picsRoutes: Routes = [
     component: PicListComponent,
   },
   {
-    path: 'pics',
-    loadChildren: 'app/pics/pics.module#PicsModule'
+    path: ':id',
+    component: PicListComponent
   },
 ];
 
 @NgModule ({
     imports: [
-        RouterModule.forRoot(picsRoutes, {
-          preloadingStrategy: PreloadAllModules
-        })
+        RouterModule.forChild(picsRoutes)
     ],
     exports: [RouterModule]
 })

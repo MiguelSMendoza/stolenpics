@@ -11,6 +11,7 @@ export class HeaderComponent implements OnInit {
   isNavbarCollapsed: boolean;
   isAuthenticated: boolean;
   username: string;
+  uid: string;
 
   constructor(private authService: AuthService) {
     this.authService.user.subscribe(
@@ -18,6 +19,7 @@ export class HeaderComponent implements OnInit {
         this.isAuthenticated = (user) ? true : false;
         if (this.isAuthenticated) {
           this.username = user.displayName;
+          this.uid = user.uid;
         }
       }
     );
