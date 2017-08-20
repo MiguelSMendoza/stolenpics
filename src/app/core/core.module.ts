@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { HomeComponent } from './home/home.component';
-import { BooksService } from '../books/books.service';
+import { PicsModule } from '../pics/pics.module';
 
 @NgModule({
   imports: [
@@ -19,12 +19,12 @@ import { BooksService } from '../books/books.service';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+    PicsModule
   ],
   declarations: [HeaderComponent, HomeComponent],
   exports: [HeaderComponent, AppRoutingModule],
   providers: [
-    AuthService,
-    BooksService
+    AuthService
   ]
 })
 export class CoreModule { }

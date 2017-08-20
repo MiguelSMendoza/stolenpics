@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FirebaseListObservable } from 'angularfire2/database';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Subscription } from 'rxjs/Subscription';
-import { BooksService } from '../../books/books.service';
-import { Book } from '../../books/model/book.model';
 import { AuthService } from '../../auth/auth.service';
 import { User } from 'firebase';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
@@ -25,13 +23,12 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   subscription: Subscription;
-  totalBooks: Book[];
-  books: Book[];
+  totalBooks: string[];
+  books: string[];
   next = 0;
   uid = '';
 
   constructor(
-    private booksService: BooksService,
     private authService: AuthService,
     public toastr: ToastsManager
   ) {
@@ -49,72 +46,17 @@ export class HomeComponent implements OnInit, OnDestroy {
    }
 
   ngOnInit() {
-    this.subscription = this.booksService.books.subscribe(
-      books => {
-        if (this.totalBooks.length !== books.length) {
-          this.totalBooks = books.reverse();
-          this.books = [];
-          this.next = 0;
-          this.doNext();
-        }
-      }
-    );
+
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+   // this.subscription.unsubscribe();
   }
 
   doNext() {
     if (this.next < this.totalBooks.length) {
       this.books.push(this.totalBooks[this.next++]);
     }
-  }
-
-  onTrade(book: Book) {
-    if (this.uid === '') {
-      this.authService.login();
-      return false;
-    }
-    this.booksService.tradeBook(book)
-    .catch(
-      (error) => {
-        this.toastr.error(error.message, error.name);
-      }
-    )
-    .then(
-      () => {
-        this.toastr.success('Now you have to wait until the owner accepts the trade.', 'Trade Saved');
-      }
-    );
-  }
-
-  onAcceptTrade(book) {
-    this.booksService.acceptTradeBook(book)
-    .catch(
-      (error) => {
-        this.toastr.error(error.message, error.name);
-      }
-    )
-    .then(
-      () => {
-        this.toastr.success('Now your book doesn\'t belong to you.', 'Trade Accepted');
-      }
-    );
-  }
-
-  onCancelTrade(book: Book) {
-    this.booksService.unTradeBook(book)
-    .catch(
-      (error) => {
-        this.toastr.error(error.message, error.name);
-      }
-    )
-    .then(
-      () => {
-        this.toastr.warning('Trade Cancelled Succesffully', 'Trade Cancel');
-      }
-    );
   }
 
 }

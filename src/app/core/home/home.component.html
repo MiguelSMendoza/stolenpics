@@ -1,37 +1,3 @@
-<h1>Book Trading Club</h1>
+<h1>StolenPics</h1>
 <hr/>
-<div class="list-group">
-    <div class="list-group-item" *ngFor="let book of books;" [@listItem] (@listItem.done)="doNext()">
-      <div class="row">
-        <div class="col-2 text-center">
-          <img *ngIf="book.thumbnail" src="{{book.thumbnail}}" width="50px" class="img-responsive center-block"/> 
-        </div>
-        <div class="col-7">
-          <h4>{{ book.title }}</h4>
-          <span class="text-muted text-small">{{ book.author }}</span>
-        </div>
-        <div class="col-3 align-middle text-center">
-            <button title="Propose a Trade" *ngIf="!book.trader && book.owner !== uid" class="btn btn-warning align-middle" (click)="onTrade(book)">
-                <i class="fa fa-exchange"></i>
-            </button>
-            <div ngbDropdown *ngIf="book.trader && book.owner == uid" class="d-inline-block">
-                <button class="btn btn-outline-success" id="dropdownBasic1" ngbDropdownToggle>
-                    <i class="fa fa-exchange" aria-hidden="true"></i>
-                </button>
-                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                    <span class="dropdown-header">{{ book.traderName }}</span>
-                    <div class="dropdown-divider"></div>
-                    <button class="dropdown-item" (click)="onAcceptTrade(book)">Accept Trade</button>
-                    <button class="dropdown-item" (click)="onCancelTrade(book)">Refuse Trade</button>
-                </div>
-            </div>
-            <span class="pull-right m-2" *ngIf="book.owner === uid"><i class="fa fa-heart fa-2x"></i></span>
-            <span title="Pending Trade" *ngIf="book.trader && book.trader !== uid && book.owner !== uid"><i class="fa fa-exchange" aria-hidden="true"></i></span>
-            <button title="Cancel Trade" *ngIf="book.trader && book.trader === uid" class="btn btn-danger align-middle" (click)="onCancelTrade(book)">
-                <i class="fa fa-exchange" aria-hidden="true"></i>
-            </button>
-        </div>
-      </div>
-      
-    </div>
-</div>
+<app-pic-list></app-pic-list>
