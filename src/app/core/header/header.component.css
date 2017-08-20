@@ -1,0 +1,10 @@
+button, a {
+    cursor: pointer;
+}
+
+@media (min-width: 48em) {
+    .nav-content {
+        margin: 0 auto;
+        max-width: 46rem;
+    }
+}
