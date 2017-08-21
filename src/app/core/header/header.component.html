@@ -1,33 +1,27 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" (click)="isNavbarCollapsed = !isNavbarCollapsed" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" (click)="isNavbarCollapsed = !isNavbarCollapsed" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-    <a class="navbar-brand" href="#">freeCodeCamp <i class="fa fa-free-code-camp"></i></a>
+    <a class="navbar-brand" routerLink="/">StolenPics <i class="fa fa-free-code-camp"></i></a>
     <div class="collapse navbar-collapse" id="navbarCollapse" [ngbCollapse]="!isNavbarCollapsed">
-        <ng-template [ngIf]="!isAuthenticated">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item" routerLinkActive="active">
-                    <a class="nav-link" routerLink="/">Home</a>
-                </li>
-            </ul>
-        </ng-template>
         <ng-template [ngIf]="isAuthenticated">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                    <a class="nav-link" routerLink="/">Home</a>
-                </li>
-            </ul>
+            <form class="form-inline my-2 my-lg-0 ">
+                <input class="form-control mr-sm-2" size="50" type="text" placeholder="Image URL" aria-label="Image URL..." #imageURL>
+                <button type="button" class="btn btn-outline-success my-2 my-sm-0" (click)="onAddPicture(imageURL)"><i class="fa fa-plus"></i> <span>Add Image</span></button>
+            </form>
         </ng-template>
-        <div class="mt-2 mt-md-0">
-            <button *ngIf="!isAuthenticated" (click)="onLogin()" class="btn btn-outline-success my-2 my-sm-0" type="button"><i class="fa fa-twitter"></i> Sign in</button>
+        <div class="mt-2 mt-md-0 ml-auto">
+            <button *ngIf="!isAuthenticated" (click)="onLogin()" class="btn btn-outline-info my-2 my-sm-0" type="button"><i class="fa fa-twitter"></i> Sign in</button>
             <ng-template [ngIf]="isAuthenticated">
-                <div ngbDropdown class="d-inline-block my-2 my-sm-0">
-                    <button class="btn btn-outline-success" id="dropdownBasic1" ngbDropdownToggle>{{username}}</button>
-                    <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownBasic1">
-                        <a [routerLink]="['/pics', uid]" class="dropdown-item">My Pics</a>
-                        <button (click)="onLogout()" class="dropdown-item" type="button">Logout</button>
-                    </div>
-                </div>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown" ngbDropdown>
+                        <a class="nav-link dropdown-toggle" id="dropdown01" ngbDropdownToggle aria-haspopup="true" aria-expanded="false">{{username}}</a>
+                        <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdown01">
+                            <a class="dropdown-item" (click)="onMyPics()">My Pics</a>
+                            <a class="dropdown-item" (click)="onLogout()">Logout</a>
+                        </div>
+                    </li>
+                </ul>
             </ng-template>
         </div>
     </div>
