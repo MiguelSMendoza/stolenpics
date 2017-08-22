@@ -1,3 +1,12 @@
-<p>
-  pic works!
-</p>
+<div class="card" style="width: 20rem;">
+    <img #imageObject class="card-img-top" src="{{ imageSRC }}" title="{{ picture.url }}" alt="Picture" (error)="updateUrl($event)">
+    <div class="card-body">
+        <div class="row">
+            <a [routerLink]="['/', picture.owner.username]" class="card-link col-auto">{{ picture.owner.name }}</a>
+            <div class="col-auto">
+                <a (click)="onLike()" class="card-link text-nowrap"><i [@divState]="heartState" (@divState.done)="onLikeDone($event, picture)" class="fa fa-heart"></i> {{ picture.likes | keys }}</a>
+                <a (click)="onSave(picture)" class="card-link text-nowrap"><i class="fa fa-floppy-o" aria-hidden="true" [@divState]="saveState" (@divState.done)="saveState='normal'"></i> {{ (picture.thiefs | keys) - 1 }}</a>
+            </div>
+        </div>
+    </div>
+</div>

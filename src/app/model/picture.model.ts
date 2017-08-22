@@ -1,12 +1,13 @@
+import { Thief } from './thief.model';
+
 export class Picture {
     public $key: string;
 
       constructor(
           public url: string,
-          public uid: string[],
-          public userPhoto: string,
-          public userName: string,
-          public likes: number,
+          public thiefs: Thief[],
+          public owner: Thief,
+          public likes: Thief[],
           public timestamp: number
       ) { }
   }

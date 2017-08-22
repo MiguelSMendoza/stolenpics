@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Picture } from './picture.model';
+import { Picture } from '../model/picture.model';
 import { FirebaseListObservable, AngularFireDatabase } from 'angularfire2/database';
 import { AuthService } from '../auth/auth.service';
-import { User } from 'firebase';
+import { User, Promise } from 'firebase';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
+import { Thief } from '../model/thief.model';
 
 @Injectable()
 export class PicsService {
@@ -31,40 +32,89 @@ export class PicsService {
       );
      }
 
+     getUserPictures(username: string) {
+      return this.pictures.map(
+        (pictures) => {
+          return pictures.filter(
+            (data) => {
+              let found = false;
+              if (data.hasOwnProperty('thiefs')) {
+                Object.keys(data.thiefs).forEach(function(key) {
+                    if (data.thiefs[key].username === username) {
+                      found = true;
+                    }
+                });
+              }
+              return found;
+            }
+          );
+        }
+      );
+     }
+
+     getUserAsThief() {
+      return new Thief(
+        this.user.uid,
+        this.user.providerData[0]['uid'],
+        this.user.displayName,
+        this.user.photoURL
+      );
+     }
+
+     likePicture(picture: Picture) {
+      const hash = btoa(picture.url);
+      if (!this.isAuthenticated || picture.likes[this.user.uid]) {
+        return new Promise((resolve, reject) => {
+          resolve('false');
+        });
+      }
+      return this.db.object('/pictures/' + hash + '/likes/' + this.user.uid)
+      .set(this.getUserAsThief());
+     }
+
+     savePicture(picture: Picture) {
+      const hash = btoa(picture.url);
+      if (!this.isAuthenticated
+        || picture.thiefs[this.user.uid]
+        || picture.owner.uid === this.user.uid) {
+        return new Promise((resolve, reject) => {
+          resolve('false');
+        });
+      }
+      return this.db.object('/pictures/' + hash + '/thiefs/' + this.user.uid)
+      .set(this.getUserAsThief());
+     }
+
      addPicture(url: string) {
        return this.getPicture(url).map(
-        (pictures) => {
-          if (pictures.length === 0) {
+        (pictureObject) => {
+          const hash = btoa(url);
+          if (!pictureObject.$exists()) {
             const picture = new Picture(
               url,
-              [this.user.uid],
-              this.user.displayName,
-              this.user.photoURL,
-              0,
+              [],
+              this.getUserAsThief(),
+              [],
               + new Date()
             );
-            return this.pictures.push(picture);
+            this.db.object('/pictures/' + hash).set(picture);
+            return this.db.object('/pictures/' + hash + '/thiefs/' + this.user.uid)
+            .set(this.getUserAsThief());
           } else {
-            const pic = pictures[0];
-            if (pic.uid.indexOf(this.user.uid) < 0 ) {
-              pic.uid.push(this.user.uid);
-              return pic.update();
-            } else {
-              return false;
-            }
+            return this.savePicture(pictureObject);
           }
         }
        );
     }
 
+    isURL(str) {
+      const pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+      return pattern.test(str);
+    }
+
     getPicture(url: string) {
-      return this.db.list('/pictures', {
-        query: {
-          orderByChild: 'url',
-          equalTo: url
-        }
-      }
-      );
+      const hash = btoa(url);
+      return this.db.object('/pictures/' + hash).first();
     }
 
 }

@@ -1,3 +1,7 @@
-<p>
-  pic-list works!
-</p>
+<div *ngIf="username">
+    <h2>{{ username }} Stolen Pictures</h2>
+    <hr/>
+</div>
+<div class="card-deck">
+    <app-pic *ngFor="let picture of pictures" [picture]="picture"></app-pic>
+</div>

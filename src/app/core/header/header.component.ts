@@ -31,16 +31,20 @@ export class HeaderComponent implements OnInit {
 
   onAddPicture(element) {
     const url = element.value;
-    if (this.isURL(url)) {
+    if (this.isURL(url) && this.isImage(url)) {
       this.picService.addPicture(url).subscribe(
         (response) => {
-          console.log(response);
-          this.toastr.success('Your Image has been included on your album', 'Image Added');
+          if (!response) {
+            this.toastr.warning('Your Image is already included on your album', 'Image Exists');
+          } else {
+            this.toastr.success('Your Image has been included on your album', 'Image Added');
+          }
           element.value = '';
         }
       );
     } else {
-      return false;
+      this.toastr.error('Not a valid URL', 'Error');
+      element.value = '';
     }
   }
 
@@ -56,13 +60,12 @@ export class HeaderComponent implements OnInit {
   }
 
   isURL(str) {
-    const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    const pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     return pattern.test(str);
+  }
+
+  isImage(url) {
+    return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
   }
 
 }
