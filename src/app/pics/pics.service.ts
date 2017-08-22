@@ -82,10 +82,13 @@ export class PicsService {
 
      likePicture(picture: Picture) {
       const hash = btoa(picture.url);
-      if (!this.isAuthenticated || picture.likes[this.user.uid]) {
+      if (!this.isAuthenticated) {
         return new Promise((resolve, reject) => {
           resolve('false');
         });
+      }
+      if (picture.likes[this.user.uid]) {
+        return this.db.object('/pictures/' + hash + '/likes/' + this.user.uid).remove();
       }
       return this.db.object('/pictures/' + hash + '/likes/' + this.user.uid)
       .set(this.getUserAsThief());
@@ -94,11 +97,13 @@ export class PicsService {
      savePicture(picture: Picture) {
       const hash = btoa(picture.url);
       if (!this.isAuthenticated
-        || picture.thiefs[this.user.uid]
         || picture.owner.uid === this.user.uid) {
         return new Promise((resolve, reject) => {
           resolve('false');
         });
+      }
+      if (picture.thiefs[this.user.uid] && picture.owner.uid !== this.user.uid) {
+        return this.db.object('/pictures/' + hash + '/thiefs/' + this.user.uid).remove();
       }
       return this.db.object('/pictures/' + hash + '/thiefs/' + this.user.uid)
       .set(this.getUserAsThief());
