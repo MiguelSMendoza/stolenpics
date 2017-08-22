@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { PicsService } from '../pics.service';
 import { Router } from '@angular/router';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 @Component({
   selector: 'app-pic',
@@ -26,11 +27,13 @@ export class PicComponent implements OnInit {
   heartState = 'normal';
   saveState = 'normal';
   imageSRC = 'assets/broken.jpg';
+  close: boolean;
 
   @Input() picture;
   @ViewChild('imageObject') imageObject;
 
-  constructor(private picService: PicsService, private router: Router) { }
+  constructor(private picService: PicsService,
+    public toastr: ToastsManager) { }
 
   ngOnInit() {
     if (!this.picture.likes) {
@@ -40,6 +43,22 @@ export class PicComponent implements OnInit {
       this.picture.thiefs = {};
     }
     this.imageSRC = this.picture.url;
+  }
+
+  onRemove() {
+    this.picService.removePicture(this.picture).catch(
+      () => {
+        this.toastr.error('An Error has ocurred.', 'Error');
+      }
+    ).then(
+      (response) => {
+        this.toastr.info('Image has been removed.', 'Removed');
+      }
+    );
+  }
+
+  canDelete() {
+    return this.picService.canDelete(this.picture);
   }
 
   updateUrl(event) {

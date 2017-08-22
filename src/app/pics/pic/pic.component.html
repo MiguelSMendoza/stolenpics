@@ -1,5 +1,10 @@
 <div class="card" style="width: 20rem;">
-    <img #imageObject class="card-img-top" src="{{ imageSRC }}" title="{{ picture.url }}" alt="Picture" (error)="updateUrl($event)">
+    <button (click)="onRemove()" type="button" class="close" aria-label="Close" *ngIf="canDelete()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <a href="{{ picture.url }}" target="_blank">
+        <img #imageObject class="card-img-top" src="{{ imageSRC }}" title="{{ picture.url }}" alt="Picture" (error)="updateUrl($event)">
+    </a>
     <div class="card-body">
         <div class="row">
             <a [routerLink]="['/', picture.owner.username]" class="card-link col-auto">{{ picture.owner.name }}</a>

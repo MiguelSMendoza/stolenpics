@@ -32,6 +32,25 @@ export class PicsService {
       );
      }
 
+     canDelete(picture) {
+       if (this.user) {
+        return this.user.uid === picture.owner.uid;
+       } else {
+         return false;
+       }
+     }
+
+     removePicture(picture) {
+       if (this.canDelete(picture)) {
+        const hash = btoa(picture.url);
+        return this.db.object('/pictures/' + hash).remove();
+       } else {
+        return new Promise((resolve, reject) => {
+          resolve('false');
+        });
+       }
+     }
+
      getUserPictures(username: string) {
       return this.pictures.map(
         (pictures) => {

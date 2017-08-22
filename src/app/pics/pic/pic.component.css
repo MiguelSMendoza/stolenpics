@@ -5,3 +5,10 @@ a {
 .fa-heart {
     color: red;
 }
+
+.close {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    cursor: pointer;
+}
