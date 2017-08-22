@@ -3,6 +3,9 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { PicsService } from '../pics.service';
 import { Router } from '@angular/router';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { Subscription } from "rxjs/Subscription";
+import { Picture } from "../../model/picture.model";
+import { FirebaseObjectObservable } from "angularfire2/database";
 
 @Component({
   selector: 'app-pic',
@@ -23,26 +26,37 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
     ])
   ]
 })
-export class PicComponent implements OnInit {
+export class PicComponent implements OnInit, OnDestroy {
   heartState = 'normal';
   saveState = 'normal';
   imageSRC = 'assets/broken.jpg';
+  subscription: Subscription;
   close: boolean;
+  picture;
 
-  @Input() picture;
+  @Input('key') key;
   @ViewChild('imageObject') imageObject;
 
   constructor(private picService: PicsService,
     public toastr: ToastsManager) { }
 
   ngOnInit() {
-    if (!this.picture.likes) {
-      this.picture.likes = {};
-    }
-    if (!this.picture.thiefs) {
-      this.picture.thiefs = {};
-    }
-    this.imageSRC = this.picture.url;
+    this.subscription = this.picService.getPictureByKey(this.key).subscribe(
+      (picture) => {
+        this.picture = picture;
+        if (!this.picture.likes) {
+          this.picture.likes = {};
+        }
+        if (!this.picture.thiefs) {
+          this.picture.thiefs = {};
+        }
+        this.imageSRC = this.picture.url;
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onRemove() {
@@ -67,24 +81,23 @@ export class PicComponent implements OnInit {
     return true;
   }
 
-  onLike(picture) {
+  onLike() {
     this.heartState = 'clicked';
   }
 
-  onLikeDone(event, picture) {
-    if (event.fromState === 'normal') {
+  onLikeDone($event, picture) {
+    if ($event.fromState === 'normal') {
       this.heartState = 'normal';
       this.picService.likePicture(picture);
     }
   }
 
-  onSave(picture) {
+  onSave() {
     this.saveState = 'clicked';
-    this.picService.savePicture(picture);
   }
 
-  onSaveDone(event, picture) {
-    if (event.fromState === 'normal') {
+  onSaveDone($event, picture) {
+    if ($event.fromState === 'normal') {
       this.saveState = 'normal';
       this.picService.savePicture(picture);
     }

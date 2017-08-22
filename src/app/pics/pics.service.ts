@@ -136,4 +136,8 @@ export class PicsService {
       return this.db.object('/pictures/' + hash).first();
     }
 
+    getPictureByKey(key: string) {
+      return this.db.object('/pictures/' + key);
+    }
+
 }

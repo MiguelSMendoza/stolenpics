@@ -10,7 +10,7 @@
             <a [routerLink]="['/', picture.owner.username]" class="card-link col-auto">{{ picture.owner.name }}</a>
             <div class="col-auto">
                 <a (click)="onLike()" class="card-link text-nowrap"><i [@divState]="heartState" (@divState.done)="onLikeDone($event, picture)" class="fa fa-heart"></i> {{ picture.likes | keys }}</a>
-                <a (click)="onSave(picture)" class="card-link text-nowrap"><i class="fa fa-floppy-o" aria-hidden="true" [@divState]="saveState" (@divState.done)="saveState='normal'"></i> {{ (picture.thiefs | keys) - 1 }}</a>
+                <a (click)="onSave()" class="card-link text-nowrap"><i class="fa fa-floppy-o" [@divState]="saveState" (@divState.done)="onSaveDone($event, picture)"></i> {{ (picture.thiefs | keys) - 1 }}</a>
             </div>
         </div>
     </div>
