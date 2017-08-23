@@ -2,6 +2,6 @@
     <h2>{{ username }} Stolen Pictures</h2>
     <hr/>
 </div>
-<div class="card-deck">
+<div class="card-columns">
     <app-pic *ngFor="let picture of pictures" [key]="picture.$key" [@listItem] (@listItem.done)="doNext()"></app-pic>
 </div>
