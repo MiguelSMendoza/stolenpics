@@ -2,13 +2,16 @@
   "name": "stolenpics",
   "version": "0.0.0",
   "license": "MIT",
+  "homepage": "https://MiguelSMendoza.github.io/stolenpics",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "predeploy": "ng build --base-href /stolenpics/",
+    "deploy": "gh-pages -d dist"
   },
   "private": true,
   "dependencies": {
@@ -24,10 +27,11 @@
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.1",
     "angularfire2": "^4.0.0-rc0",
     "bootstrap": "^4.0.0-beta",
+    "core-js": "^2.4.1",
     "firebase": "^4.3.0",
     "font-awesome": "^4.7.0",
+    "gh-pages": "^1.0.0",
     "ng2-toastr": "^4.1.2",
-    "core-js": "^2.4.1",
     "rxjs": "^5.4.1",
     "zone.js": "^0.8.14"
   },
