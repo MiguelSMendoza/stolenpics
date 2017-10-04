@@ -1,6 +1,10 @@
+[![Build Status](https://travis-ci.org/MiguelSMendoza/stolenpics.svg?branch=master)](https://travis-ci.org/MiguelSMendoza/stolenpics)
+
 # Stolenpics
 
 Full Stack JavaScript App created following instructions on [freeCodeCamp](https://www.freecodecamp.org/challenges/build-a-pinterest-clone).
+
+[Live Demo](https://MiguelSMendoza.github.io/stolenpics)
 
 ## User Stories
 * As an unauthenticated user, I can login with Twitter.

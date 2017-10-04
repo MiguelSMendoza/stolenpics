@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+  - "node"
+branches:
+  only:
+    - master
+before_script:
+  - npm install -g @angular/cli
+  - npm install -g gh-pages
+script:
+  - npm install
+  - ng build --prod --base-href /book-trading-club/
+after_success:
+ - git config --global user.name "Miguel S. Mendoza"
+ - git config --global user.email "[email protected]"
+ - git remote rm origin
+ - git remote add origin https://MiguelSMendoza:${GH_TOKEN}@github.com/MiguelSMendoza/stolenpics.git
+ - npm run deploy
+notifications:
+  email:
+    on_failure: miguel@smendoza.net
+    on_success: miguel@smendoza.net
