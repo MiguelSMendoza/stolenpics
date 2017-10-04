@@ -576,6 +576,8 @@ var KeysPipe = (function () {
     function KeysPipe() {
     }
     KeysPipe.prototype.transform = function (value) {
+        if (!value)
+            return 0;
         return Object.keys(value).length;
     };
     return KeysPipe;
@@ -611,7 +613,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/pics/pic-list/pic-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"username\">\n    <h2>{{ username }} Stolen Pictures</h2>\n    <hr/>\n</div>\n<div class=\"card-columns\">\n    <app-pic *ngFor=\"let picture of pictures\" [key]=\"picture.$key\" [@listItem] (@listItem.done)=\"doNext()\"></app-pic>\n</div>"
+module.exports = "<div *ngIf=\"username\">\n    <h2>{{ username }} Stolen Pictures</h2>\n    <hr/>\n</div>\n<div class=\"card-columns\">\n    <app-pic *ngFor=\"let picture of pictures\" [picture]=\"picture\" [@listItem] (@listItem.done)=\"doNext()\"></app-pic>\n</div>"
 
 /***/ }),
 
@@ -772,17 +774,7 @@ var PicComponent = (function () {
         this.imageSRC = 'assets/broken.jpg';
     }
     PicComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.subscription = this.picService.getPictureByKey(this.key).snapshotChanges().subscribe(function (picture) {
-            _this.picture = picture;
-            if (!_this.picture.likes) {
-                _this.picture.likes = {};
-            }
-            if (!_this.picture.thiefs) {
-                _this.picture.thiefs = {};
-            }
-            _this.imageSRC = _this.picture.url;
-        });
+        this.imageSRC = this.picture.url;
     };
     PicComponent.prototype.ngOnDestroy = function () {
         this.subscription.unsubscribe();
@@ -824,9 +816,9 @@ var PicComponent = (function () {
     return PicComponent;
 }());
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])('key'),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])('picture'),
     __metadata("design:type", Object)
-], PicComponent.prototype, "key", void 0);
+], PicComponent.prototype, "picture", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewChild"])('imageObject'),
     __metadata("design:type", Object)
