@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { Subscription } from "rxjs/Subscription";
 import { Picture } from "../../model/picture.model";
-import { FirebaseObjectObservable } from "angularfire2/database";
+import { AngularFireList } from "angularfire2/database";
 
 @Component({
   selector: 'app-pic',
@@ -41,7 +41,7 @@ export class PicComponent implements OnInit, OnDestroy {
     public toastr: ToastsManager) { }
 
   ngOnInit() {
-    this.subscription = this.picService.getPictureByKey(this.key).subscribe(
+    this.subscription = this.picService.getPictureByKey(this.key).snapshotChanges().subscribe(
       (picture) => {
         this.picture = picture;
         if (!this.picture.likes) {

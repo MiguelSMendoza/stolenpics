@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireList } from 'angularfire2/database';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from '../../auth/auth.service';

@@ -53,9 +53,9 @@ export class PicListComponent implements OnInit, OnDestroy {
                     this.initPictures(pictures);
                     const user = this.user;
                     let name = '';
-                    Object.keys(pictures[0].thiefs).forEach(function(key) {
-                      if (pictures[0].thiefs[key].username === user) {
-                        name = pictures[0].thiefs[key].name;
+                    Object.keys(pictures[0]['thiefs']).forEach(function(key) {
+                      if (pictures[0]['thiefs'][key].username === user) {
+                        name = pictures[0]['thiefs'][key].name;
                       }
                     });
                     this.username = name;
@@ -66,7 +66,7 @@ export class PicListComponent implements OnInit, OnDestroy {
             );
           } else {
             this.subscription.push(
-              this.picService.pictures.subscribe(
+              this.picService.pictures.valueChanges().subscribe(
                 (pictures) => {
                   this.initPictures(pictures);
                 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Picture } from '../model/picture.model';
-import { FirebaseListObservable, AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireList, AngularFireDatabase } from 'angularfire2/database';
 import { AuthService } from '../auth/auth.service';
-import { User, Promise } from 'firebase';
+import { User } from 'firebase';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { Thief } from '../model/thief.model';
@@ -10,16 +10,12 @@ import { Thief } from '../model/thief.model';
 @Injectable()
 export class PicsService {
   isAuthenticated: boolean;
-  pictures: FirebaseListObservable<Picture[]>;
+  pictures: AngularFireList<Picture>;
   user: User;
 
   constructor(private db: AngularFireDatabase,
     private authService: AuthService) {
-      this.pictures = db.list('/pictures', {
-        query: {
-          orderByChild: 'timestamp',
-        }
-      });
+      this.pictures = db.list('/pictures', ref=> ref.orderByChild('timestamp'));
       this.authService.user.subscribe(
         (user: User) => {
           this.isAuthenticated = (user) ? true : false;
@@ -52,14 +48,14 @@ export class PicsService {
      }
 
      getUserPictures(username: string) {
-      return this.pictures.map(
-        (pictures) => {
+      return this.pictures.valueChanges().map(
+        pictures => {
           return pictures.filter(
-            (data) => {
+            (data) => {      
               let found = false;
               if (data.hasOwnProperty('thiefs')) {
-                Object.keys(data.thiefs).forEach(function(key) {
-                    if (data.thiefs[key].username === username) {
+                Object.keys(data['thiefs']).forEach(function(key) {
+                    if (data['thiefs'][key].username === username) {
                       found = true;
                     }
                 });
@@ -110,8 +106,9 @@ export class PicsService {
      }
 
      addPicture(url: string) {
-       return this.getPicture(url).map(
-        (pictureObject) => {
+       return this.getPicture(url).snapshotChanges().map(
+        (action) => {
+          const pictureObject = action.payload.val();
           const hash = btoa(url);
           if (!pictureObject.$exists()) {
             const picture = new Picture(
@@ -138,7 +135,7 @@ export class PicsService {
 
     getPicture(url: string) {
       const hash = btoa(url);
-      return this.db.object('/pictures/' + hash).first();
+      return this.db.object('/pictures/' + hash);
     }
 
     getPictureByKey(key: string) {
