@@ -3,5 +3,5 @@
     <hr/>
 </div>
 <div class="card-columns">
-    <app-pic *ngFor="let picture of pictures" [key]="picture.$key" [@listItem] (@listItem.done)="doNext()"></app-pic>
+    <app-pic *ngFor="let picture of pictures" [picture]="picture" [@listItem] (@listItem.done)="doNext()"></app-pic>
 </div>

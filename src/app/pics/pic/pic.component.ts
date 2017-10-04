@@ -32,27 +32,15 @@ export class PicComponent implements OnInit, OnDestroy {
   imageSRC = 'assets/broken.jpg';
   subscription: Subscription;
   close: boolean;
-  picture;
 
-  @Input('key') key;
+  @Input('picture') picture;
   @ViewChild('imageObject') imageObject;
 
   constructor(private picService: PicsService,
     public toastr: ToastsManager) { }
 
   ngOnInit() {
-    this.subscription = this.picService.getPictureByKey(this.key).snapshotChanges().subscribe(
-      (picture) => {
-        this.picture = picture;
-        if (!this.picture.likes) {
-          this.picture.likes = {};
-        }
-        if (!this.picture.thiefs) {
-          this.picture.thiefs = {};
-        }
-        this.imageSRC = this.picture.url;
-      }
-    );
+    this.imageSRC = this.picture.url;
   }
 
   ngOnDestroy(): void {
